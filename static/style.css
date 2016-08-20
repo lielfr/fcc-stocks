@@ -1,0 +1,9 @@
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; }
+
+#stocksChart {
+  height: 75vh !important;
+  width: auto !important; }

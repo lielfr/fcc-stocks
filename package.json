@@ -1,0 +1,46 @@
+{
+  "name": "fcc-stocks",
+  "version": "0.0.1",
+  "description": "My solution to FCC's Chart the Stock Market challenge.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-css": "node-sass --include-path static_src/scss static_src/scss/main.scss static/style.css",
+    "build-js": "babel static_src/jsx -d static/js",
+    "build": "npm run build-css && npm run build-js",
+    "app": "npm run build && node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lielfr/fcc-stocks.git"
+  },
+  "author": "Liel Fridman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lielfr/fcc-stocks/issues"
+  },
+  "homepage": "https://github.com/lielfr/fcc-stocks#readme",
+  "dependencies": {
+    "co": "^4.6.0",
+    "express": "^4.14.0",
+    "helmet": "^2.1.2",
+    "pug": "^2.0.0-beta5",
+    "request": "^2.74.0",
+    "socket.io": "^1.4.8",
+    "sync-request": "^3.0.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.11.4",
+    "babel-preset-es2015": "^6.13.2",
+    "babel-preset-react": "^6.11.1",
+    "node-sass": "^3.8.0",
+    "nodemon": "^1.10.2"
+  },
+  "babel": {
+    "presets": [
+      "react",
+      "es2015"
+    ],
+    "plugins": []
+  }
+}
