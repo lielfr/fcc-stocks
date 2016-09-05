@@ -4,11 +4,20 @@ body {
   align-items: center;
   justify-content: center;
 
+  background-color: #2e294e;
+
   .container-fluid {
     width: 100% !important;
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  color: white;
+  font-family: 'Varela Round', sans-serif;
+
+  h1 {
+    margin-top: 0.5em;
+    font-family: 'Pacifico', cursive;
   }
 }
 
@@ -17,4 +26,23 @@ body {
   height: auto !important;
   margin-left: auto;
   margin-right: auto;
+}
+
+.boxesHolder {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-self: center;
+}
+
+.stockBox {
+  background-color: #8d99ae;
+  border-radius: 4px;
+  margin-right: 0.25em;
+  padding-left: 0.25em;
+
+  .btn {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
 }

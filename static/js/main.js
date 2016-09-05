@@ -12,8 +12,12 @@ var StockBox = React.createClass({
   render: function render() {
     return React.createElement(
       'div',
-      { 'class': 'stockBox' },
-      this.props.name,
+      { className: 'stockBox' },
+      React.createElement(
+        'span',
+        null,
+        this.props.name
+      ),
       ' ',
       React.createElement(
         'button',
@@ -34,7 +38,22 @@ var BoxesHolder = React.createClass({
   },
   removeItem: function removeItem(event) {
     var targetBox = event.target.parentElement;
-    targetBox.parentElement.removeChild(targetBox);
+    var toRemove = targetBox.querySelector('span').innerHTML;
+    var targetState = this.state;
+    targetState.stocks = this.state.stocks.filter(function (item) {
+      return item !== toRemove;
+    });
+    this.setState(targetState);
+  },
+  addItem: function addItem(event) {
+    event.preventDefault();
+    var nameHolder = event.target.querySelector('#newName');
+    if (this.state.stocks.indexOf(nameHolder.value) < 0) {
+      var targetState = this.state;
+      targetState.stocks.push(nameHolder.value);
+      nameHolder.value = '';
+      this.setState(targetState);
+    }
   },
   render: function render() {
     var _this = this;
@@ -44,8 +63,31 @@ var BoxesHolder = React.createClass({
     });
     return React.createElement(
       'div',
-      { 'class': 'boxesHolder' },
-      blocks
+      { className: 'boxesHolder' },
+      blocks,
+      React.createElement(
+        'div',
+        { className: 'dropdown' },
+        React.createElement(
+          'button',
+          { id: 'addButton', className: 'btn btn-success', 'aria-label': 'Add a new stock', 'data-toggle': 'dropdown', 'aria-haspopup': 'true', 'aria-expanded': 'false' },
+          React.createElement('i', { className: 'fa fa-plus', 'aria-hidden': 'true' })
+        ),
+        React.createElement(
+          'div',
+          { className: 'dropdown-menu', 'aria-labelledby': 'addButton' },
+          React.createElement(
+            'form',
+            { id: 'newStock', className: 'form-inline', onSubmit: this.addItem },
+            React.createElement('input', { className: 'form-control', type: 'text', id: 'newName' }),
+            React.createElement(
+              'button',
+              { className: 'btn btn-success', type: 'submit' },
+              'Add'
+            )
+          )
+        )
+      )
     );
   }
 });
