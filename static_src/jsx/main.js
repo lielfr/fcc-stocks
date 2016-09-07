@@ -3,7 +3,6 @@ var currHolder;
 var socket = io();
 
 Chart.defaults.global.defaultFontColor = 'white';
-Chart.defaults.global.defaultFontFamily = "'Varela Round', sans-serif";
 
 var updateStocksChart = (stockNames) => {
   if (stocksChart)
