@@ -4,6 +4,9 @@ var stocksChart;
 var currHolder;
 var socket = io();
 
+Chart.defaults.global.defaultFontColor = 'white';
+Chart.defaults.global.defaultFontFamily = "'Varela Round', sans-serif";
+
 var updateStocksChart = function updateStocksChart(stockNames) {
   if (stocksChart) stocksChart.destroy();
   if (currHolder && currHolder.state.stocks !== stockNames) currHolder.setState({ stocks: stockNames });

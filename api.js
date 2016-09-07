@@ -4,7 +4,7 @@ var request = require('sync-request');
 var utils = require('./utils');
 
 
-var getStocksOptions = (stock, diff=366) => {
+var getStocksOptions = (stock, diff=365.25) => {
   let options = {
     uri: 'http://chart.finance.yahoo.com/table.csv',
     qs: {}
