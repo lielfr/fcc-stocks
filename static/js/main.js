@@ -1,10 +1,20 @@
 'use strict';
 
+var stocksChart;
+var currHolder;
+var socket = io();
+
 var updateStocksChart = function updateStocksChart(stockNames) {
-  $.getJSON('/api/' + stockNames.join(','), function (data) {
-    var stocksChart = new Chart($('#stocksChart'), data);
-  });
+  if (stocksChart) stocksChart.destroy();
+  if (currHolder && currHolder.state.stocks !== stockNames) currHolder.setState({ stocks: stockNames });
+  if (stockNames.length > 0) {
+    $.getJSON('/api/' + stockNames.join(','), function (data) {
+      stocksChart = new Chart($('#stocksChart'), data);
+    });
+  }
 };
+
+socket.on('stocksUpdate', updateStocksChart);
 
 var StockBox = React.createClass({
   displayName: 'StockBox',
@@ -33,26 +43,25 @@ var BoxesHolder = React.createClass({
 
   getInitialState: function getInitialState() {
     return {
-      stocks: ['AAPL', 'GOOGL']
+      stocks: []
     };
   },
   removeItem: function removeItem(event) {
     var targetBox = event.target.parentElement;
     var toRemove = targetBox.querySelector('span').innerHTML;
-    var targetState = this.state;
-    targetState.stocks = this.state.stocks.filter(function (item) {
+    var targetStocks = this.state.stocks.filter(function (item) {
       return item !== toRemove;
     });
-    this.setState(targetState);
+    socket.emit('stocksUpdate', targetStocks);
   },
   addItem: function addItem(event) {
     event.preventDefault();
+    $('#addButton').dropdown('toggle');
     var nameHolder = event.target.querySelector('#newName');
     if (this.state.stocks.indexOf(nameHolder.value) < 0) {
-      var targetState = this.state;
-      targetState.stocks.push(nameHolder.value);
-      nameHolder.value = '';
-      this.setState(targetState);
+      var targetStocks = this.state.stocks;
+      targetStocks.push(nameHolder.value);
+      socket.emit('stocksUpdate', targetStocks);
     }
   },
   render: function render() {
@@ -93,5 +102,5 @@ var BoxesHolder = React.createClass({
 });
 
 $(document).ready(function () {
-  ReactDOM.render(React.createElement(BoxesHolder, null), document.querySelector('#barHolder'));
+  currHolder = ReactDOM.render(React.createElement(BoxesHolder, null), document.querySelector('#barHolder'));
 });

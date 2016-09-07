@@ -53,7 +53,7 @@ router.get('/:stocks', (req, res) => {
       label: stock,
       data: csvData[1].reverse(),
       borderColor: gColor,
-      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      backgroundColor: gColor,
       pointStyle: 'line'
     });
   });

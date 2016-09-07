@@ -16,4 +16,16 @@ app.get('/', (req, res) => {
   res.render('index');
 });
 
+var allStocks = ['AAPL', 'GOOGL'];
+
+
+io.on('connection', (socket) => {
+  socket.emit('stocksUpdate', allStocks);
+  socket.on('stocksUpdate', (stocks) => {
+    console.log('Updating stocks to: ' + stocks);
+    allStocks = stocks;
+    io.emit('stocksUpdate', allStocks);
+  });
+});
+
 server.listen(process.env.PORT | 8080);

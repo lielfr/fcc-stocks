@@ -1,8 +1,20 @@
+var stocksChart;
+var currHolder;
+var socket = io();
+
 var updateStocksChart = (stockNames) => {
-  $.getJSON('/api/' + stockNames.join(','), (data) => {
-    var stocksChart = new Chart($('#stocksChart'), data);
-  });
+  if (stocksChart)
+    stocksChart.destroy();
+  if (currHolder && currHolder.state.stocks !== stockNames)
+    currHolder.setState({stocks: stockNames});
+    if (stockNames.length > 0) {
+      $.getJSON('/api/' + stockNames.join(','), (data) => {
+        stocksChart = new Chart($('#stocksChart'), data);
+      });
+    }
 };
+
+socket.on('stocksUpdate', updateStocksChart);
 
 var StockBox = React.createClass({
   render: function() {
@@ -20,23 +32,22 @@ var StockBox = React.createClass({
 
 var BoxesHolder = React.createClass({
   getInitialState: () => ({
-    stocks: ['AAPL', 'GOOGL']
+    stocks: []
   }),
   removeItem: function (event) {
     let targetBox = event.target.parentElement;
     let toRemove = targetBox.querySelector('span').innerHTML;
-    let targetState = this.state;
-    targetState.stocks = this.state.stocks.filter((item) => item !== toRemove);
-    this.setState(targetState);
+    let targetStocks = this.state.stocks.filter((item) => item !== toRemove);
+    socket.emit('stocksUpdate', targetStocks);
   },
   addItem: function(event) {
     event.preventDefault();
+    $('#addButton').dropdown('toggle');
     let nameHolder = event.target.querySelector('#newName');
     if (this.state.stocks.indexOf(nameHolder.value) < 0) {
-      let targetState = this.state;
-      targetState.stocks.push(nameHolder.value);
-      nameHolder.value = '';
-      this.setState(targetState);
+      let targetStocks = this.state.stocks;
+      targetStocks.push(nameHolder.value);
+      socket.emit('stocksUpdate', targetStocks);
     }
   },
   render: function() {
@@ -61,7 +72,7 @@ var BoxesHolder = React.createClass({
 });
 
 $(document).ready(() => {
-  ReactDOM.render(
+  currHolder = ReactDOM.render(
     <BoxesHolder />,
     document.querySelector('#barHolder')
   );

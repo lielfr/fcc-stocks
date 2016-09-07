@@ -16,7 +16,7 @@ body {
     font-family: 'Pacifico', cursive; }
 
 #stocksChart {
-  width: 80% !important;
+  width: 90% !important;
   height: auto !important;
   margin-left: auto;
   margin-right: auto; }
@@ -26,11 +26,14 @@ body {
   flex-direction: row;
   flex-wrap: wrap;
   align-self: center; }
+  .boxesHolder .dropdown {
+    margin-top: 0.25em; }
 
 .stockBox {
   background-color: #8d99ae;
   border-radius: 4px;
   margin-right: 0.25em;
+  margin-top: 0.25em;
   padding-left: 0.25em; }
   .stockBox .btn {
     border-top-left-radius: 0;
