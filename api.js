@@ -48,7 +48,7 @@ router.get('/:stocks', (req, res) => {
     var csvData = makeRequest(stock);
     if (labels.length === 0)
       labels = csvData[0].reverse();
-    var gColor = utils.randomGraphColor();
+    var gColor = '#ffff00';
     dataSets.push({
       label: stock,
       data: csvData[1].reverse(),
@@ -57,6 +57,7 @@ router.get('/:stocks', (req, res) => {
       pointStyle: 'line'
     });
   });
+  utils.fillColors(labels, dataSets);
   res.end(JSON.stringify({
     type: 'line',
     data: {
