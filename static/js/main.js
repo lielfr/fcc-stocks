@@ -58,13 +58,20 @@ var BoxesHolder = React.createClass({
   },
   addItem: function addItem(event) {
     event.preventDefault();
-    $('#addButton').dropdown('toggle');
     var nameHolder = event.target.querySelector('#newName');
     if (this.state.stocks.indexOf(nameHolder.value) < 0) {
       var targetStocks = this.state.stocks;
       targetStocks.push(nameHolder.value);
       socket.emit('stocksUpdate', targetStocks);
     }
+    this.toggleForm();
+    nameHolder.value = '';
+  },
+  toggleForm: function toggleForm() {
+    var stockForm = document.querySelector(".stockAdd-menu");
+    var stockFormDisplay = stockForm.style.display;
+    var isHidden = stockFormDisplay === '' || stockFormDisplay === 'none';
+    stockForm.style.display = isHidden ? 'inline-block' : 'none';
   },
   render: function render() {
     var _this = this;
@@ -78,15 +85,15 @@ var BoxesHolder = React.createClass({
       blocks,
       React.createElement(
         'div',
-        { className: 'dropdown' },
+        { className: 'stockAdd' },
         React.createElement(
           'button',
-          { id: 'addButton', className: 'btn btn-success', 'aria-label': 'Add a new stock', 'data-toggle': 'dropdown', 'aria-haspopup': 'true', 'aria-expanded': 'false' },
+          { id: 'addButton', className: 'btn btn-success', 'aria-label': 'Add a new stock', 'aria-haspopup': 'true', 'aria-expanded': 'false', onClick: this.toggleForm },
           React.createElement('i', { className: 'fa fa-plus', 'aria-hidden': 'true' })
         ),
         React.createElement(
           'div',
-          { className: 'dropdown-menu', 'aria-labelledby': 'addButton' },
+          { className: 'stockAdd-menu', 'aria-labelledby': 'addButton' },
           React.createElement(
             'form',
             { id: 'newStock', className: 'form-inline', onSubmit: this.addItem },

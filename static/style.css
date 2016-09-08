@@ -25,8 +25,9 @@ body {
   flex-direction: row;
   flex-wrap: wrap;
   align-self: center; }
-  .boxesHolder .dropdown {
-    margin-top: 0.25em; }
+  .boxesHolder .stockAdd {
+    margin-top: 0.25em;
+    display: inline-flex; }
 
 .stockBox {
   background-color: #8d99ae;
@@ -37,3 +38,16 @@ body {
   .stockBox .btn {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0; }
+
+.form-inline {
+  display: flex;
+  flex-direction: row; }
+
+.stockAdd-menu {
+  display: none;
+  padding: 0 0.25em 0 0.25em;
+  background-color: #8d99ae;
+  border-radius: 4px; }
+
+.btn-success {
+  margin-right: 0.25em; }

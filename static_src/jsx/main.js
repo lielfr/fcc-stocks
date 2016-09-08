@@ -44,24 +44,31 @@ var BoxesHolder = React.createClass({
   },
   addItem: function(event) {
     event.preventDefault();
-    $('#addButton').dropdown('toggle');
     let nameHolder = event.target.querySelector('#newName');
     if (this.state.stocks.indexOf(nameHolder.value) < 0) {
       let targetStocks = this.state.stocks;
       targetStocks.push(nameHolder.value);
       socket.emit('stocksUpdate', targetStocks);
     }
+    this.toggleForm();
+    nameHolder.value = '';
+  },
+  toggleForm: function() {
+    let stockForm = document.querySelector(".stockAdd-menu");
+    let stockFormDisplay = stockForm.style.display;
+    let isHidden = stockFormDisplay === '' || stockFormDisplay === 'none';
+    stockForm.style.display = isHidden? 'inline-block':'none';
   },
   render: function() {
     var blocks = this.state.stocks.map((item) => <StockBox name={item} removeItem={this.removeItem} />);
     return (
       <div className="boxesHolder">
         {blocks}
-        <div className="dropdown">
-          <button id="addButton" className="btn btn-success" aria-label="Add a new stock" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <div className="stockAdd">
+          <button id="addButton" className="btn btn-success" aria-label="Add a new stock" aria-haspopup="true" aria-expanded="false" onClick={this.toggleForm}>
             <i className="fa fa-plus" aria-hidden="true"></i>
           </button>
-          <div className="dropdown-menu" aria-labelledby="addButton">
+          <div className="stockAdd-menu" aria-labelledby="addButton">
             <form id="newStock" className="form-inline" onSubmit={this.addItem}>
               <input className="form-control" type="text" id="newName" />
               <button className="btn btn-success" type="submit">Add</button>
