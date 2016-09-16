@@ -3,26 +3,32 @@ var currHolder;
 var socket = io();
 
 Chart.defaults.global.defaultFontColor = 'white';
+Chart.defaults.global.legend.display = false;
 
 var updateStocksChart = (stockNames) => {
   if (stocksChart)
     stocksChart.destroy();
   if (currHolder && currHolder.state.stocks !== stockNames)
-    currHolder.setState({stocks: stockNames});
-    if (stockNames.length > 0) {
-      $.getJSON('/api/' + stockNames.join(','), (data) => {
-        stocksChart = new Chart($('#stocksChart'), data);
+  if (stockNames.length > 0) {
+    $.getJSON('/api/' + stockNames.join(','), (data) => {
+      stocksChart = new Chart($('#stocksChart'), data);
+      currHolder.setState({
+        stocks: stockNames,
+        colors: data.data.datasets.map((item) => item.backgroundColor)
       });
-    }
+    });
+  }
 };
 
 socket.on('stocksUpdate', updateStocksChart);
 
 var StockBox = React.createClass({
   render: function() {
+    var colorBoxStyle = {backgroundColor: this.props.color};
     return (
       <div className="stockBox">
-        <span>{this.props.name}</span>
+        <span className="colorBox" style={colorBoxStyle}></span>
+        <span className="stockText">{this.props.name}</span>
         &nbsp;
         <button className="btn btn-danger" aria-label="Remove this stock" onClick={this.props.removeItem}>
           <i className="fa fa-times" aria-hidden="true"></i>
@@ -34,12 +40,14 @@ var StockBox = React.createClass({
 
 var BoxesHolder = React.createClass({
   getInitialState: () => ({
-    stocks: []
+    stocks: [],
+    colors: []
   }),
   removeItem: function (event) {
     let targetBox = event.target.parentElement;
-    let toRemove = targetBox.querySelector('span').innerHTML;
+    let toRemove = targetBox.querySelector('.stockText').innerHTML;
     let targetStocks = this.state.stocks.filter((item) => item !== toRemove);
+    targetBox.style.display = 'none';
     socket.emit('stocksUpdate', targetStocks);
   },
   addItem: function(event) {
@@ -60,7 +68,11 @@ var BoxesHolder = React.createClass({
     stockForm.style.display = isHidden? 'inline-block':'none';
   },
   render: function() {
-    var blocks = this.state.stocks.map((item) => <StockBox name={item} removeItem={this.removeItem} />);
+    var blocks;
+    if (this.state.colors.length > 0)
+      blocks = this.state.stocks.map((item, index) => <StockBox name={item} removeItem={this.removeItem} color={this.state.colors[index]} />);
+    else
+      blocks = this.state.stocks.map((item, index) => <StockBox name={item} removeItem={this.removeItem} color="black" />);
     return (
       <div className="boxesHolder">
         {blocks}

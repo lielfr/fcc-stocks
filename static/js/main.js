@@ -5,13 +5,19 @@ var currHolder;
 var socket = io();
 
 Chart.defaults.global.defaultFontColor = 'white';
+Chart.defaults.global.legend.display = false;
 
 var updateStocksChart = function updateStocksChart(stockNames) {
   if (stocksChart) stocksChart.destroy();
-  if (currHolder && currHolder.state.stocks !== stockNames) currHolder.setState({ stocks: stockNames });
-  if (stockNames.length > 0) {
+  if (currHolder && currHolder.state.stocks !== stockNames) if (stockNames.length > 0) {
     $.getJSON('/api/' + stockNames.join(','), function (data) {
       stocksChart = new Chart($('#stocksChart'), data);
+      currHolder.setState({
+        stocks: stockNames,
+        colors: data.data.datasets.map(function (item) {
+          return item.backgroundColor;
+        })
+      });
     });
   }
 };
@@ -22,12 +28,14 @@ var StockBox = React.createClass({
   displayName: 'StockBox',
 
   render: function render() {
+    var colorBoxStyle = { backgroundColor: this.props.color };
     return React.createElement(
       'div',
       { className: 'stockBox' },
+      React.createElement('span', { className: 'colorBox', style: colorBoxStyle }),
       React.createElement(
         'span',
-        null,
+        { className: 'stockText' },
         this.props.name
       ),
       ' ',
@@ -45,15 +53,17 @@ var BoxesHolder = React.createClass({
 
   getInitialState: function getInitialState() {
     return {
-      stocks: []
+      stocks: [],
+      colors: []
     };
   },
   removeItem: function removeItem(event) {
     var targetBox = event.target.parentElement;
-    var toRemove = targetBox.querySelector('span').innerHTML;
+    var toRemove = targetBox.querySelector('.stockText').innerHTML;
     var targetStocks = this.state.stocks.filter(function (item) {
       return item !== toRemove;
     });
+    targetBox.style.display = 'none';
     socket.emit('stocksUpdate', targetStocks);
   },
   addItem: function addItem(event) {
@@ -76,8 +86,11 @@ var BoxesHolder = React.createClass({
   render: function render() {
     var _this = this;
 
-    var blocks = this.state.stocks.map(function (item) {
-      return React.createElement(StockBox, { name: item, removeItem: _this.removeItem });
+    var blocks;
+    if (this.state.colors.length > 0) blocks = this.state.stocks.map(function (item, index) {
+      return React.createElement(StockBox, { name: item, removeItem: _this.removeItem, color: _this.state.colors[index] });
+    });else blocks = this.state.stocks.map(function (item, index) {
+      return React.createElement(StockBox, { name: item, removeItem: _this.removeItem, color: 'black' });
     });
     return React.createElement(
       'div',

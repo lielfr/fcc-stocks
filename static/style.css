@@ -3,6 +3,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  min-height: 100vh;
   background-color: #2e294e;
   color: white;
   font-family: 'Varela Round', sans-serif; }
@@ -12,32 +13,46 @@ body {
     align-items: center;
     justify-content: center; }
   body h1 {
-    margin-top: 0.5em; }
+    margin-top: 0.1em; }
 
 #stocksChart {
-  width: 90% !important;
-  height: auto !important;
   margin-left: auto;
-  margin-right: auto; }
+  margin-right: auto;
+  flex: 1 1 auto;
+  height: 100%; }
 
 .boxesHolder {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  align-self: center; }
+  align-self: center;
+  margin-bottom: 1rem;
+  max-width: 100vh;
+  flex: 0 1 auto; }
   .boxesHolder .stockAdd {
     margin-top: 0.25em;
     display: inline-flex; }
+    .boxesHolder .stockAdd input {
+      width: 8rem; }
 
 .stockBox {
   background-color: #8d99ae;
   border-radius: 4px;
   margin-right: 0.25em;
   margin-top: 0.25em;
-  padding-left: 0.25em; }
+  padding-left: 0.25rem; }
   .stockBox .btn {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0; }
+  .stockBox span {
+    margin-right: 0.5rem; }
+  .stockBox .colorBox {
+    display: inline-flex;
+    align-self: center;
+    width: 1.25rem;
+    height: 0.75rem;
+    border-radius: 4px;
+    border: 0.1rem solid white; }
 
 .form-inline {
   display: flex;
