@@ -45,6 +45,8 @@ body {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0; }
   .stockBox span {
+    margin-left: 0.5rem; }
+  .stockBox .stockText {
     margin-right: 0.5rem; }
   .stockBox .colorBox {
     display: inline-flex;
