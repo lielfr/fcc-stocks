@@ -36,6 +36,8 @@ var parseCSV = (str) => {
 var makeRequest = (stock) => {
   let options = getStocksOptions(stock);
   let req = request('GET', options.uri, {qs: options.qs});
+  if (req.statusCode !== 200)
+    return false;
   return parseCSV(req.getBody('utf8'));
 };
 
@@ -46,6 +48,8 @@ router.get('/:stocks', (req, res) => {
   var dataSets = [];
   stocks.forEach((stock) => {
     var csvData = makeRequest(stock);
+    if (!csvData)
+      return;
     if (labels.length === 0)
       labels = csvData[0].reverse();
     var gColor = '#ffff00';
